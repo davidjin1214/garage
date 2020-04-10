@@ -10,7 +10,8 @@ class PPO(VPG):
     Args:
         env_spec (garage.envs.EnvSpec): Environment specification.
         policy (garage.torch.policies.base.Policy): Policy.
-        value_function (garage.np.baselines.Baseline): The value function.
+        value_function (garage.torch.value_functions.ValueFunction): The value
+            function.
         optimizer (Union[type, tuple[type, dict]]): Type of optimizer.
             This can be an optimizer type such as `torch.optim.Adam` or a
             tuple of type and dictionary, where dictionary contains arguments

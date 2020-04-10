@@ -11,7 +11,8 @@ class TRPO(VPG):
     Args:
         env_spec (garage.envs.EnvSpec): Environment specification.
         policy (garage.torch.policies.base.Policy): Policy.
-        value_function (garage.np.baselines.Baseline): The value function.
+        value_function (garage.torch.value_functions.ValueFunction): The value
+            function.
         max_path_length (int): Maximum length of a single rollout.
         num_train_per_epoch (int): Number of train_once calls per epoch.
         discount (float): Discount.
@@ -102,6 +103,9 @@ class TRPO(VPG):
         surrogate = likelihood_ratio * advantages
 
         return surrogate
+
+    def _get_contraints(self, obs):
+        self._compute_kl_constraint(obs)
 
     def _optimize(self, obs, actions, rewards, advantages):
         r"""Performs a optimization.

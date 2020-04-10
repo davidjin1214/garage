@@ -21,7 +21,6 @@ import torch
 
 from garage.envs import normalize
 from garage.experiment import deterministic, LocalRunner
-from garage.np.baselines import LinearFeatureBaseline
 from garage.tf.algos import PPO as TF_PPO
 from garage.tf.baselines import GaussianMLPBaseline as TF_GMB
 from garage.tf.envs import TfEnv
@@ -30,6 +29,7 @@ from garage.tf.optimizers import FirstOrderOptimizer
 from garage.tf.policies import GaussianMLPPolicy as TF_GMP
 from garage.torch.algos import PPO as PyTorch_PPO
 from garage.torch.policies import GaussianMLPPolicy as PyTorch_GMP
+from garage.torch.value_functions import GaussianMLPValueFunction
 from tests import benchmark_helper
 from tests import helpers as Rh
 from tests.fixtures import snapshot_config
@@ -170,11 +170,14 @@ def run_garage_pytorch(env, seed, log_dir):
                          hidden_nonlinearity=torch.tanh,
                          output_nonlinearity=None)
 
-    value_functions = LinearFeatureBaseline(env_spec=env.spec)
+    value_function = GaussianMLPValueFunction(env_spec=env.spec,
+                                              hidden_sizes=(32, 32),
+                                              hidden_nonlinearity=torch.tanh,
+                                              output_nonlinearity=None)
 
     algo = PyTorch_PPO(env_spec=env.spec,
                        policy=policy,
-                       value_function=value_functions,
+                       value_function=value_function,
                        optimizer=torch.optim.Adam,
                        policy_lr=3e-4,
                        max_path_length=hyper_parameters['max_path_length'],

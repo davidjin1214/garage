@@ -21,6 +21,7 @@ from garage.tf.experiment import LocalTFRunner
 from garage.tf.policies import GaussianMLPPolicy as TF_GMP
 from garage.torch.algos import VPG as PyTorch_VPG
 from garage.torch.policies import GaussianMLPPolicy as PyTorch_GMP
+from garage.torch.value_functions import GaussianMLPValueFunction
 from tests import benchmark_helper
 from tests import helpers as Rh
 from tests.fixtures import snapshot_config
@@ -144,7 +145,10 @@ def run_garage_pytorch(env, seed, log_dir):
                          hidden_nonlinearity=torch.tanh,
                          output_nonlinearity=None)
 
-    value_function = LinearFeatureBaseline(env_spec=env.spec)
+    value_function = GaussianMLPValueFunction(env_spec=env.spec,
+                                              hidden_sizes=(32, 32),
+                                              hidden_nonlinearity=torch.tanh,
+                                              output_nonlinearity=None)
 
     algo = PyTorch_VPG(env_spec=env.spec,
                        policy=policy,
